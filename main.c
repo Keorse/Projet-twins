@@ -8,10 +8,6 @@ typedef struct avion{
 }avion;
 
 
-
-
-
-
 typedef struct piste{
     int num_piste;
     float longueur;
@@ -22,8 +18,19 @@ typedef struct piste{
     avion* liste_av;//1er avion de la liste
 }piste;
 
+//------------------structure parking---------------------//
+typedef struct parking parking;
+struct parking{
+    int maxParking;
+    avion* liste_av;
+};
 
 
+
+
+int compteurPiste(piste* );
+int compteurParking(parking* );
+void atterrissage(piste *piste_une, parking *parking1, avion *avion1);
 avion init_avion(int id,int cat_av, int is_flying , int nb_passaers);
 void print_avion(avion avion);
 piste init_piste(int num_piste, float longueur, int cat_piste, int max_await);
@@ -34,6 +41,71 @@ int main() {
 
     return 0;
 }
+
+
+
+//-------------------------------------fonction pour compter le nb davions--------------//
+int compteurPiste(piste* piste_une){
+    int cpt = 0;
+    avion *tmp;
+    tmp = piste_une->liste_av; 
+    while(tmp != NULL){
+        cpt++;
+        tmp = tmp->suiv;            //->suiv car on est dans la liste avion 
+    }
+    return cpt;
+}
+
+int compteurParking(parking* p){
+    int cpt = 0;
+    avion *tmp;
+    tmp = p->liste_av; 
+    while(tmp != NULL){
+        cpt++;
+        tmp = tmp->suiv;
+    }
+    return cpt;
+}
+//-------------------------------------------------------------------------------------//
+//-------------------------fonction atterrissage--------------------------------------//
+void atterrissage(piste *piste_une, parking *parking1, avion *avion1){
+    int cpt = compteurPiste(piste_une);
+    int cpt2 = compteurParking(parking1);
+    if(cpt < piste_une->max_await_takeoff){         //test si on peut passer sur piste pour aller garage
+        if(cpt2 < parking1->maxParking){             //test si place dans le garage 
+            avion *tmp = parking1->liste_av;
+            while(tmp->suiv != NULL){               //parcour liste chainée du garage 
+                tmp = tmp->suiv;
+            }
+            tmp->suiv = avion1;                     //Place l'avion dans le garage
+        }
+
+        else{
+            //BA LA JE SAIS PAS, par ce que les avions dans le garage n'ont pas forcement besoin de decoller....
+        }
+    }
+    else if(cpt = piste_une->max_await_takeoff){
+
+
+        //!!doit trouver un truc pour stockée l'avion qui part!!//
+        piste_une->liste_av = piste_une->liste_av->suiv;            //on fait decoller le premiere avion qui est arrivé dans la liste,  ca revient a le supprimé de la liste mais pas le free
+
+
+
+                //une fois qu'on a fait decoller un avion, on peut utiliser la piste pour aller au parking si il y a de la place
+        if(cpt2 < parking1->maxParking){             //test si place dans le garage 
+            avion *tmp = parking1->liste_av;
+            while(tmp->suiv != NULL){               //parcour liste chainée du garage 
+                tmp = tmp->suiv;
+            }
+            tmp->suiv = avion1;                     //Place l'avion dans le garage
+        }
+        else{
+            //BA LA JE SAIS PAS, par ce que les avions dans le garage n'ont pas forcement besoin de decoller....
+        }
+    }
+}
+//---------------------------------------------------------------------------------------------------------------------//
 
 
 piste init_piste(int num_piste, float longueur, int cat_piste, int max_await){
