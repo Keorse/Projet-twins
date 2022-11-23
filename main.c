@@ -71,7 +71,7 @@ int compteurParking(parking* p){
 void atterrissage(piste *piste_une, parking *parking1, avion *avion1){
     int cpt = compteurPiste(piste_une);
     int cpt2 = compteurParking(parking1);
-    if(cpt < piste_une->max_await_takeoff){         //test si on peut passer sur piste pour aller garage
+    if((cpt-1) < piste_une->max_await_takeoff){         //test si on peut passer sur piste pour aller garage    !!!!!! c'est cpt-1 mon reuf
         if(cpt2 < parking1->maxParking){             //test si place dans le garage 
             avion *tmp = parking1->liste_av;
             while(tmp->suiv != NULL){               //parcour liste chainée du garage 
