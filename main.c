@@ -2,7 +2,7 @@
 typedef struct avion{
     int id;
     int cat_av;//1 av de ligne    2 av affaire     3 av léger
-    int is_flying;// 1 pour un avion en vol    0 pour un avion au sol
+    int is_parked;// 1 pour un avion en vol    0 pour un avion au sol
     int nb_passengers;
     struct avion* suiv;
 }avion;
@@ -16,7 +16,9 @@ typedef struct piste{
     int num_piste;
     float longueur;
     int cat_piste;//1 petite  2 Moyenne   3 petite
-    int max_await;
+    int max_await_takeoff;
+    int is_busy;//1 occupé   2 libre
+    //int ping-pong;
     avion* liste_av;//1er avion de la liste
 }piste;
 
@@ -58,7 +60,7 @@ void print_piste(piste piste){
     printf("numero de la piste:%d\n",piste.num_piste);
     printf("longueur de la piste:%f\n",piste.longueur);
     printf("categorie de la piste:%d\n",piste.cat_piste);
-    printf("numero de la piste:%d\n",piste.max_await);
+    printf("numero de la piste:%d\n",piste.max_await_takeoff);
     avion* tmp= piste.liste_av;
     if(tmp!=NULL){
         while(tmp!=NULL){
@@ -73,6 +75,6 @@ void print_piste(piste piste){
 void print_avion(avion avion){
     printf("id de l'avion:%d\n",avion.id);
     printf("catégorie de l'avion:%d\n",avion.cat_av);
-    printf("is_flying:%d\n",avion.is_flying);
+    printf("is_flying:%d\n",avion.is_parked);
     printf("passagers de l'avion:%d\n",avion.nb_passengers);
 }
