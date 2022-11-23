@@ -80,8 +80,11 @@ void atterrissage(piste *piste_une, parking *parking1, avion *avion1){
             tmp->suiv = avion1;                     //Place l'avion dans le garage
         }
 
-        else{
+        else if(cpt2 >= parking1->maxParking){
+            //mettre la fonction decollage ici
+            
             //BA LA JE SAIS PAS, par ce que les avions dans le garage n'ont pas forcement besoin de decoller....
+            //Si si il faut en degager un si il n'y a plus de place dans le garage a moins que on fasse un Allahouabar mais bof perso
         }
     }
     else if(cpt = piste_une->max_await_takeoff){
@@ -102,6 +105,7 @@ void atterrissage(piste *piste_une, parking *parking1, avion *avion1){
         }
         else{
             //BA LA JE SAIS PAS, par ce que les avions dans le garage n'ont pas forcement besoin de decoller....
+            //la meme que au dessus mon gars
         }
     }
 }
