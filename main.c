@@ -20,5 +20,10 @@ int main() {
 
 
 piste init_piste(int num_piste, float longueur, int cat_piste, int max_await){
+    piste piste;
     
+    piste.num_piste=num_piste;
+    
+    
+    return piste;
 };
