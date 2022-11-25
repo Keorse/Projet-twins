@@ -18,6 +18,10 @@ typedef struct piste{
     avion* liste_av;//1er avion de la liste
 }piste;
 
+typedef struct liste{
+    avion* avion;
+}liste;
+
 //------------------structure parking---------------------//
 typedef struct parking parking;
 struct parking{
