@@ -5,12 +5,16 @@
 
 typedef struct avion avion;
 struct avion{
-    int id;
+    int id;// à  verifier a chaque init pour que il soit unique
     int cat_av;//1 av de ligne    2 av affaire     3 av léger
     int is_parked;// 1 pour un avion en vol    0 pour un avion au sol
     int nb_passengers;
-    struct avion* suiv;
 };
+
+typedef struct liste{
+    avion avion;
+    struct liste * suiv;
+}liste;
 
 
 typedef struct piste piste;
@@ -21,7 +25,7 @@ struct piste{
     int max_await_takeoff;
     int is_busy;//1 occupé   2 libre
     //int ping-pong;
-    avion* liste_av;//1er avion de la liste
+    liste* liste_av;//1er avion de la liste
 };
 
 //------------------------------structure parking
