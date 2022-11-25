@@ -3,8 +3,8 @@
 
 //jai modifier piste et avion pour que ce soit des liste chainée
 
-typedef struct avion avion;
-struct avion{
+
+typedef struct avion{
     int id;// à  verifier a chaque init pour que il soit unique
     int cat_av;//1 av de ligne    2 av affaire     3 av léger
     int is_parked;// 1 pour un avion en vol    0 pour un avion au sol
