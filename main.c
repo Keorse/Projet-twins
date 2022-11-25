@@ -71,7 +71,7 @@ int compteurParking(parking* p){
 void atterrissage(piste *piste_une, parking *parking1, avion *avion1){
     int cpt = compteurPiste(piste_une);
     int cpt2 = compteurParking(parking1);
-    if((cpt-1) < piste_une->max_await_takeoff){         //test si on peut passer sur piste pour aller garage    !!!!!! c'est cpt-1 mon reuf
+    if((cpt+1) < piste_une->max_await_takeoff){         //test si on peut passer sur piste pour aller garage    !!!!!! c'est cpt+1 enft
         if(cpt2 < parking1->maxParking){             //test si place dans le garage 
             avion *tmp = parking1->liste_av;
             while(tmp->suiv != NULL){               //parcour liste chainée du garage 
@@ -81,16 +81,17 @@ void atterrissage(piste *piste_une, parking *parking1, avion *avion1){
         }
 
         else if(cpt2 >= parking1->maxParking){
-            //mettre la fonction decollage ici
+            //mettre la fonction affectation a la liste d'attente de la piste ici(adri)
             
             //BA LA JE SAIS PAS, par ce que les avions dans le garage n'ont pas forcement besoin de decoller....
-            //Si si il faut en degager un si il n'y a plus de place dans le garage a moins que on fasse un Allahouabar mais bof perso
+            //Si si il faut en degager un si il n'y a plus de place dans le garage a moins que on fasse un Allahouabar mais bof perso(adri)
         }
     }
     else if(cpt = piste_une->max_await_takeoff){
 
 
         //!!doit trouver un truc pour stockée l'avion qui part!!//
+        //fonction takeoff dcp(adri)
         piste_une->liste_av = piste_une->liste_av->suiv;            //on fait decoller le premiere avion qui est arrivé dans la liste,  ca revient a le supprimé de la liste mais pas le free
 
 
