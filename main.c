@@ -1,7 +1,6 @@
+
 #include <stdio.h>
 #include <stdlib.h>
-
-//jai modifier piste et avion pour que ce soit des liste chainée
 
 
 typedef struct avion{
@@ -9,82 +8,35 @@ typedef struct avion{
     int cat_av;//1 av de ligne    2 av affaire     3 av léger
     int is_parked;// 1 pour un avion en vol    0 pour un avion au sol
     int nb_passengers;
+}avion;
+
+typedef struct liste liste;
+struct liste{
+    avion avion;
+    struct liste *suiv;
 };
 
-typedef struct liste{
-    avion avion;
-    struct liste * suiv;
-}liste;
 
-
-typedef struct piste piste;
-struct piste{
+typedef struct piste{
     int num_piste;
     float longueur;
     int cat_piste;//1 petite  2 Moyenne   3 petite
     int max_await_takeoff;
     int is_busy;//1 occupé   2 libre
-    //int ping-pong;
-    liste* liste_av;//1er avion de la liste
-};
+    liste *liste_av;
+}piste;
 
 //------------------------------structure parking
-typedef struct parking parking;
-struct parking{
+typedef struct parking{
     int maxParking;
-    avion* liste_av;
-};
+    liste *liste_av;
+}parking;
 
 
-
-
-int compteurPiste(piste* );
-int compteurParking(parking* );
-avion* rechercheID(avion *listeAvion, int ID);
-void atterrissage(piste *piste_une, parking *parking1, avion *AVIONS);
-avion init_avion(int id,int cat_av, int is_flying , int nb_passaers);
-void print_avion(avion *avion);
-void print_piste(piste*);
-piste *init_piste(int num_piste, float longueur, int cat_piste, int max_await);
-avion *init_avion(int id,int cat_av, int nb_passaers);
-
-
-//--------------------------------main-------------------------------------------//
-
-
-
-int main() {
-   avion *avion1 = NULL;
-    avion1 = init_avion(1, 3, 0);
-
-    avion *avion2 = NULL;
-    avion2 = malloc(sizeof(avion));
-    init_avion(1, 3, 0);
-    
-    piste *piste1 = NULL;
-    piste1 = init_piste(9, 90, 3, 1);
-    piste1->liste_av = avion1;
-
-
-    parking *parking1 = NULL;
-    parking1 = malloc(sizeof(parking));
-    parking1->maxParking =1;
-    parking1->liste_av = avion2;
-    
-    avion *listeVOLENT = NULL;
-    listeVOLENT = init_avion(2, 3, 10);
-
-    atterrissage(piste1, parking1, listeVOLENT);
-    return 0;
-}
-
-
-
-//-------------------------------------fonction pour compter le nb davions--------------//
-int compteurPiste(piste* piste_une){
+int compteurPiste(piste piste_une){
     int cpt = 0;
-    avion *tmp;
-    tmp = piste_une->liste_av; 
+    liste *tmp = NULL;
+    tmp = piste_une.liste_av; 
     while(tmp != NULL){
         cpt++;
         tmp = tmp->suiv;            //->suiv car on est dans la liste avion 
@@ -92,28 +44,27 @@ int compteurPiste(piste* piste_une){
     return cpt;
 }
 
-int compteurParking(parking* p){
+int compteurParking(parking p){
     int cpt = 0;
-    avion *tmp;
-    tmp = p->liste_av; 
+    liste *tmp;
+    tmp = p.liste_av; 
     while(tmp != NULL){
         cpt++;
         tmp = tmp->suiv;
     }
     return cpt;
 }
-//-------------------------------------------------------------------------------------//
-//JAI RAJOUTE RECHERCHE ID POUR POUVOIR SELECTIONNER LAVION A FAIRE ATTERIR DANS LA FONCTION ATTERRISSAGE
 
-avion* rechercheID(avion *listeAvion, int ID){
-    avion *retour;
+
+avion rechercheID(liste *listeAvion, int ID){
+    avion retour;
     if(listeAvion != NULL){
-        avion *parcour = listeAvion;
+        liste *parcour = listeAvion;
         while (parcour != NULL)
         {
-            if (parcour->id == ID)
+            if (parcour->avion.id == ID)
             {
-                retour = parcour;
+                retour = parcour->avion;
                 return retour;
             }
             
@@ -122,142 +73,136 @@ avion* rechercheID(avion *listeAvion, int ID){
         printf("id non-trouvé\n");
     }
     else printf("erreur liste vide\n");
-    return NULL;
+    exit(0);
 }
-//RECHERCHE ID, TROUVE LAVION,LE STOCK DANS UNE VARIABLE QUI SERA RETOURNER EN SORTIE. LAVION EST AUSSI SUPPRIME DE LA LISTE DES AVIONS EN VOLS
 
 
-//-------------------------fonction atterrissage--------------------------------------//
-void atterrissage(piste *piste_une, parking *parking1, avion *AVIONS){
+liste* ajouteAvionFin(liste *Liste, avion Avion){
+    if(Liste != NULL){
+	    /*créer un maillon*/ 
+	    liste *variable = NULL;
+	    variable = malloc(sizeof(liste));
+	    variable->avion = Avion;
+	    variable->suiv = NULL;
+	    
+	    liste *tmp = Liste;
+	    while (tmp->suiv != NULL)
+	    {
+		tmp = tmp->suiv;
+	    }
+	    tmp->suiv = variable;  //ajoute le maillon a la fin de la liste
+	    return Liste;
+    }
+    else{
+    	printf("liste vide\n");         //si la liste est vide on ferme tout le programme
+    	exit(0);                        //jai pas trouver dautre solution, parce que je peux pas utiliser de return 
+    }
+}
+
+void atterrissage(piste piste_une, parking parking1, liste *AVIONS){
     int cpt = compteurPiste(piste_une);
     int cpt2 = compteurParking(parking1);
     int ID;
-    avion *avion_atterri; 
+    avion avion_atterri; 
     printf("quel avion voulez-vous faire atterrir (entrez son id)");
     scanf("%d", &ID);
     avion_atterri = rechercheID(AVIONS, ID);
 
-    if(avion_atterri != NULL){
-        if(cpt < piste_une->max_await_takeoff){         //test si on peut passer sur piste pour aller garage
-            if(cpt2 < parking1->maxParking){             //test si place dans le garage 
-                avion *tmp = parking1->liste_av;
-                while(tmp->suiv != NULL){               //parcour liste chainée du garage 
-                    tmp = tmp->suiv;
-                }
-                tmp->suiv = avion_atterri;                     //Place l'avion dans le garage
+    if(&avion_atterri != NULL){                         //&avion != NULL parce que s'il y a une adresse c quil existe, sans le & ca marche pas parce que les NULL c bizarre
+        if(cpt < piste_une.max_await_takeoff){         //test si on peut passer sur piste pour aller garage
+
+            if(cpt2 < parking1.maxParking){             //test si place dans le garage 
+                parking1.liste_av = ajouteAvionFin(parking1.liste_av, avion_atterri);                   //Place l'avion dans le garage
                 printf("\nl'avion a atterri\n\n");
             }
-
             else{
-                avion *stocktmp_parking = parking1->liste_av;
-                stocktmp_parking->suiv = NULL;
-                avion *parcour_piste = piste_une->liste_av;
-                while (parcour_piste->suiv != NULL)
-                {
-                    parcour_piste = parcour_piste->suiv;
-                }
-                parcour_piste->suiv = stocktmp_parking;
-                parking1->liste_av = parking1->liste_av->suiv;
+                /*faire partir un avion du garage sur la piste*/
+                avion premier_parking = parking1.liste_av->avion; //on stock le 1er avion du parking pour apres lamener sur piste
+                parking1.liste_av = parking1.liste_av->suiv; //lavion est enlever du parking
 
-                avion *tmp = parking1->liste_av;
-                while(tmp->suiv != NULL){               //parcour liste chainée du garage 
-                    tmp = tmp->suiv;
-                }
-                tmp->suiv = avion_atterri;   
+                piste_une.liste_av = ajouteAvionFin(piste_une.liste_av, premier_parking);
+
+                /*faire entrer l'avion dans le garage*/
+                parking1.liste_av = ajouteAvionFin(parking1.liste_av, avion_atterri);
                 printf("\nl'avion a atterri\n\n");             
             }
+
         }
-        else if(cpt = piste_une->max_await_takeoff){
 
+        else if(cpt = piste_une.max_await_takeoff){
+            /*sort un avion de la piste et on le met en lair*/
+            avion degage_piste = piste_une.liste_av->avion;
+            piste_une.liste_av = piste_une.liste_av->suiv;
+            AVIONS = ajouteAvionFin(AVIONS, degage_piste); 
 
-            avion *stock_temporaire = piste_une->liste_av;
-            stock_temporaire->suiv = NULL;
-            avion *parcour = AVIONS;
-
-            while (parcour->suiv != NULL)
-            {
-                parcour = parcour->suiv;
-            }
-            parcour->suiv = stock_temporaire;
-
-            piste_une->liste_av = piste_une->liste_av->suiv;            //on fait decoller le premiere avion qui est arrivé dans la liste,  ca revient a le supprimé de la liste mais pas le free
-
-
-                    //une fois qu'on a fait decoller un avion, on peut utiliser la piste pour aller au parking si il y a de la place
-            if(cpt2 < parking1->maxParking){             //test si place dans le garage 
-                avion *tmp = parking1->liste_av;
-                while(tmp->suiv != NULL){               //parcour liste chainée du garage 
-                    tmp = tmp->suiv;
-                }
-                tmp->suiv = avion_atterri;                     //Place l'avion dans le garage
+            /*une fois qu'on a fait decoller un avion, on peut utiliser la piste pour aller au parking si il y a de la place*/
+            if(cpt2 < parking1.maxParking){             //test si place dans le garage 
+                parking1.liste_av = ajouteAvionFin(parking1.liste_av, avion_atterri);                   //Place l'avion dans le garage
                 printf("\nl'avion a atterri\n\n");
             }
             else{
-                avion *stocktmp_parking = parking1->liste_av;
-                stocktmp_parking->suiv = NULL;
-                avion *parcour_piste = piste_une->liste_av;
-                while (parcour_piste->suiv != NULL)
-                {
-                    parcour_piste = parcour_piste->suiv;
-                }
-                parcour_piste->suiv = stocktmp_parking;
-                parking1->liste_av = parking1->liste_av->suiv;
+                /*faire partir un avion du garage sur la piste*/
+                avion premier_parking = parking1.liste_av->avion; //on stock le 1er avion du parking pour apres lamener sur piste
+                parking1.liste_av = parking1.liste_av->suiv; //lavion est enlever du parking
 
-                avion *tmp = parking1->liste_av;
-                while(tmp->suiv != NULL){               //parcour liste chainée du garage 
-                    tmp = tmp->suiv;
-                }
-                tmp->suiv = avion_atterri;
+                piste_une.liste_av = ajouteAvionFin(piste_une.liste_av, premier_parking);
+
+                /*faire entrer l'avion dans le garage*/
+                parking1.liste_av = ajouteAvionFin(parking1.liste_av, avion_atterri);
                 printf("\nl'avion a atterri\n\n");
             }
         }
     }
     else printf("\n il n'y a pas d'avions dans le ciel\n\n");
 }
-//---------------------------------------------------------------------------------------------------------------------//
 
 
-piste *init_piste(int num_piste, float longueur, int cat_piste, int max_await){
-        piste *piste1 = NULL;
-        piste1 = malloc(sizeof(piste));
-        
-        piste1->num_piste=num_piste;
-        piste1->longueur=longueur;
-        piste1->cat_piste=cat_piste;
-        piste1->max_await_takeoff=max_await;
-        piste1->liste_av=NULL;
+piste init_piste(int num_piste, float longueur, int cat_piste, int max_await){
+        piste piste1;
+        piste1.num_piste=num_piste;
+        piste1.longueur=longueur;
+        piste1.cat_piste=cat_piste;
+        piste1.max_await_takeoff=max_await;
+        piste1.liste_av=NULL;
+        piste1.liste_av = malloc(sizeof(liste));
         return piste1;
 };
 
-avion *init_avion(int id,int cat_av, int nb_passaers){
-    avion *avion1 = NULL;
-    avion1 = malloc(sizeof(avion));
-    avion1->nb_passengers=nb_passaers;
-    avion1->cat_av=cat_av;
-    avion1->id=id;
-    avion1->suiv=NULL;
+avion init_avion(int id,int cat_av, int nb_passaers){
+    avion avion1;
+    avion1.nb_passengers=nb_passaers;
+    avion1.cat_av=cat_av;
+    avion1.id=id;
     return avion1;
 };
 
-void print_piste(piste *piste){
-    printf("numero de la piste:%d\n",piste->num_piste);
-    printf("longueur de la piste:%f\n",piste->longueur);
-    printf("categorie de la piste:%d\n",piste->cat_piste);
-    printf("numero de la piste:%d\n",piste->max_await_takeoff);
-    avion* tmp= piste->liste_av;
-    if(tmp!=NULL){
-        while(tmp!=NULL){
-            print_avion(tmp);
-            tmp=tmp->suiv;
-        }
-    }
-};
+
+int main(){
+    avion avion1; 
+    avion1 = init_avion(1, 1, 10);
 
 
+    avion avion2 = init_avion(2,1,20);
+    avion avion3 = init_avion(3,1,10); 
+    piste piste1 = init_piste(3, 90, 3, 2);
+    
+    piste1.liste_av->avion = avion2; 
 
-void print_avion(avion *avion){
-    printf("id de l'avion:%d\n",avion->id);
-    printf("catégorie de l'avion:%d\n",avion->cat_av);
-    printf("is_flying:%d\n",avion->is_parked);
-    printf("passagers de l'avion:%d\n",avion->nb_passengers);
+    parking parking1; 
+    parking1.maxParking =1;
+    parking1.liste_av = NULL;
+    parking1.liste_av = malloc(sizeof(liste));
+    parking1.liste_av->avion = avion3; 
+
+
+    liste *tetedeliste = NULL;
+    liste *avionVolent; 
+    avionVolent = malloc(sizeof(liste));
+    avionVolent->avion = avion1;
+    avionVolent->suiv = NULL;
+    
+    tetedeliste = avionVolent;
+    atterrissage(piste1, parking1, tetedeliste);
+
+    return 0;
 }
