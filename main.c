@@ -146,9 +146,14 @@ liste* ajouteAvionFin(liste *Liste, avion Avion){
 	    tmp->suiv = variable;  //ajoute le maillon a la fin de la liste
 	    return Liste;
     }
-    else{
-    	printf("liste vide\n");         //si la liste est vide on ferme tout le programme
-    	exit(0);                        //jai pas trouver dautre solution, parce que je peux pas utiliser de return 
+    else{					//en gros la jdisais que si la liste elle etais vide yavait un problème
+	liste *variable = NULL;			//sauf que non, si elle est vide, on la comble
+	variable = malloc(sizeof(liste));       // c'est le but de la fonction 
+	variable->avion = Avion;
+	variable->suiv = NULL;
+	    
+	Liste = variable; 
+	return Liste;
     }
 }
 
