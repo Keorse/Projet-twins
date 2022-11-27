@@ -33,6 +33,55 @@ typedef struct parking{
 }parking;
 
 
+
+
+
+
+int compteurPiste(piste piste_une);
+int compteurParking(parking p);
+avion rechercheID(liste *listeAvion, int ID);
+liste* ajouteAvionFin(liste *Liste, avion Avion);
+void atterrissage(piste piste_une, parking parking1, liste *AVIONS);
+piste init_piste(int num_piste, float longueur, int cat_piste, int max_await);
+avion init_avion(int id,int cat_av, int nb_passaers);
+
+
+
+
+
+
+
+int main(){
+    avion avion1; 
+    avion1 = init_avion(1, 1, 10);
+
+
+    avion avion2 = init_avion(2,1,20);
+    avion avion3 = init_avion(3,1,10); 
+    piste piste1 = init_piste(3, 90, 3, 2);
+    
+    piste1.liste_av->avion = avion2; 
+
+    parking parking1; 
+    parking1.maxParking =1;
+    parking1.liste_av = NULL;
+    parking1.liste_av = malloc(sizeof(liste));
+    parking1.liste_av->avion = avion3; 
+
+
+    liste *tetedeliste = NULL;
+    liste *avionVolent; 
+    avionVolent = malloc(sizeof(liste));
+    avionVolent->avion = avion1;
+    avionVolent->suiv = NULL;
+    
+    tetedeliste = avionVolent;
+    atterrissage(piste1, parking1, tetedeliste);
+
+    return 0;
+}
+
+
 int compteurPiste(piste piste_une){
     int cpt = 0;
     liste *tmp = NULL;
@@ -77,6 +126,10 @@ avion rechercheID(liste *listeAvion, int ID){
 }
 
 
+
+
+
+
 liste* ajouteAvionFin(liste *Liste, avion Avion){
     if(Liste != NULL){
 	    /*créer un maillon*/ 
@@ -98,6 +151,10 @@ liste* ajouteAvionFin(liste *Liste, avion Avion){
     	exit(0);                        //jai pas trouver dautre solution, parce que je peux pas utiliser de return 
     }
 }
+
+
+
+
 
 void atterrissage(piste piste_une, parking parking1, liste *AVIONS){
     int cpt = compteurPiste(piste_une);
@@ -157,6 +214,8 @@ void atterrissage(piste piste_une, parking parking1, liste *AVIONS){
 }
 
 
+
+
 piste init_piste(int num_piste, float longueur, int cat_piste, int max_await){
         piste piste1;
         piste1.num_piste=num_piste;
@@ -168,6 +227,9 @@ piste init_piste(int num_piste, float longueur, int cat_piste, int max_await){
         return piste1;
 };
 
+
+
+
 avion init_avion(int id,int cat_av, int nb_passaers){
     avion avion1;
     avion1.nb_passengers=nb_passaers;
@@ -177,32 +239,3 @@ avion init_avion(int id,int cat_av, int nb_passaers){
 };
 
 
-int main(){
-    avion avion1; 
-    avion1 = init_avion(1, 1, 10);
-
-
-    avion avion2 = init_avion(2,1,20);
-    avion avion3 = init_avion(3,1,10); 
-    piste piste1 = init_piste(3, 90, 3, 2);
-    
-    piste1.liste_av->avion = avion2; 
-
-    parking parking1; 
-    parking1.maxParking =1;
-    parking1.liste_av = NULL;
-    parking1.liste_av = malloc(sizeof(liste));
-    parking1.liste_av->avion = avion3; 
-
-
-    liste *tetedeliste = NULL;
-    liste *avionVolent; 
-    avionVolent = malloc(sizeof(liste));
-    avionVolent->avion = avion1;
-    avionVolent->suiv = NULL;
-    
-    tetedeliste = avionVolent;
-    atterrissage(piste1, parking1, tetedeliste);
-
-    return 0;
-}
