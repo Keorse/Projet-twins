@@ -44,8 +44,9 @@ liste* ajouteAvionFin(liste *Liste, avion Avion);
 void atterrissage(piste piste_une, parking parking1, liste *AVIONS);
 piste init_piste(int num_piste, float longueur, int cat_piste, int max_await);
 avion init_avion(int id,int cat_av, int nb_passaers);
-
-
+liste* add_waitlist_piste(piste piste_une, parking parking1);//retourne la liste d'attente de la piste donée en parametre
+liste* RetireAvionDebut(liste *Liste);
+void decollage(piste piste, liste* air);
 
 
 
@@ -243,4 +244,39 @@ avion init_avion(int id,int cat_av, int nb_passaers){
     return avion1;
 };
 
+liste* add_waitlist_piste(piste piste_une, parking parking1){
+    int cpt_piste = compteurPiste(piste_une);
+    int cpt_park = compteurParking(parking1);
+    if(cpt_park==0){
+        printf("il n'y as pas d'avions dans le parking\n");
+        return piste_une.liste_av;
+    }
+    int ID;
+    avion avion_decollage;
+    printf("quel avion voulez-vous faire atterrir (entrez son id)");
+    scanf("%d", &ID);
+    avion_decollage = rechercheID(parking1.liste_av, ID);
+    if(cpt_piste<piste_une.max_await_takeoff){
+        piste_une.liste_av= ajouteAvionFin(piste_une.liste_av,avion_decollage);
+        printf("\nl'avion attends de décoller\n\n");
+        return piste_une.liste_av;
+    }
+    if(cpt_piste==piste_une.max_await_takeoff){
 
+        // METTRE FONCTION DECOLLAGE
+
+
+        piste_une.liste_av= ajouteAvionFin(piste_une.liste_av,avion_decollage);
+        printf("\nl'avion attends de décoller\n\n");
+        return piste_une.liste_av;
+
+    }
+    return piste_une.liste_av;
+}
+
+
+void decollage(piste piste, liste* air){
+    avion avion_decollage=piste.liste_av->avion;
+    RetireAvionDebut(piste.liste_av);
+    ajouteAvionFin(air,avion_decollage);
+}
