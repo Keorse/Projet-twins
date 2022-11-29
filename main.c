@@ -47,6 +47,8 @@ avion init_avion(int id,int cat_av, int nb_passaers);
 liste* add_waitlist_piste(piste piste_une, parking parking1);//retourne la liste d'attente de la piste donée en parametre
 liste* RetireAvionDebut(liste *Liste);
 void decollage(piste piste, liste* air);
+void menu();
+void affiche_Avion(avion avion);
 
 
 
@@ -315,4 +317,36 @@ void menu()
 				break;	
 		}
 	}
+}
+void affiche_Avion(avion avion)
+{
+	char vol[30],cat[30];
+	
+	if(avion.cat_av==1)
+	{
+		strcpy(cat,"avion de ligne");
+	}
+	else if(avion.cat_av==2)
+	{
+		strcpy(cat,"avion d'affaires");
+	}
+	else
+	{
+		strcpy(cat,"avion léger");
+	}
+	if(avion.is_parked==0)
+	{
+		strcpy(vol,"au sol");
+	}
+	else
+	{
+		strcpy(vol,"en vol");
+	}
+	printf("\t----------------------------------------------------\n");
+	printf("\t description de l'avion:\n\n");
+	printf("\t -id: %d\n", avion.id);
+	printf("\t -catégorie de l'avion: %s\n",cat);
+	printf("\t -état de l'avion : %s\n",vol );
+	printf("\t -nombre de passager: %d\n",avion.nb_passengers);	
+	printf("\t----------------------------------------------------\n");		
 }
