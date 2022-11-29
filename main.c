@@ -280,3 +280,39 @@ void decollage(piste piste, liste* air){
     RetireAvionDebut(piste.liste_av);
     ajouteAvionFin(air,avion_decollage);
 }
+void menu()
+{
+	int a=0,j=0;
+	while(j==0)
+	{
+		printf(" \t=================================================\n");
+		printf("\t\tBIENVENUE DANS L'AEROPORT ONE PISTE\n");
+		printf("\t=================================================\n");
+		
+		
+			printf("\t----------------------------------------------------\n");
+			printf("\tque voulez vous faire:\n\n");
+			printf("\t1: lancer une simulation\n\t2: ajouter un avion a la base de donnés\n\t3: quitter\n");
+			printf("\t----------------------------------------------------\n");
+			scanf("%d",&a);
+		switch(a)
+		{
+			case 1:
+				//lancer la simulation
+				system("clear");
+
+				break;
+			case 2:
+			//	attribue_valeur_avion();// dedans on crée un avion lui donne des valeur et on rentre dans un fichier
+				system("clear");
+
+				break;
+			case 3:
+				j++;
+				break;
+			default:
+				printf("ce choix n'est pas disponible");
+				break;	
+		}
+	}
+}
