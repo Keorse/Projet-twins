@@ -40,7 +40,7 @@ int compteurPiste(piste piste_une);
 int compteurParking(parking p);
 avion rechercheID(liste *listeAvion, int ID);
 liste* ajouteAvionFin(liste *Liste, avion Avion);
-void atterrissage(piste piste_une, parking parking1, liste *AVIONS);
+void atterrissage(piste *piste_une, parking *parking1, liste *AVIONS);
 piste init_piste(int num_piste, float longueur, int cat_piste, int max_await);
 avion init_avion(int id,int cat_av, int nb_passaers);
 parking init_parking(int maxparking);
@@ -165,63 +165,62 @@ liste* ajouteAvionFin(liste *Liste, avion Avion){
 
 
 
-
-void atterrissage(piste piste_une, parking parking1, liste *AVIONS){
-    int cpt = compteurPiste(piste_une);
-    int cpt2 = compteurParking(parking1);
+void atterrissage(piste *piste_une, parking *parking1, liste *AVIONS){
+    int cpt = compteurPiste(*piste_une);
+    int cpt2 = compteurParking(*parking1);
     int ID;
-    avion avion_atterri; 
+    avion avion_atterri;
     printf("quel avion voulez-vous faire atterrir (entrez son id)");
     scanf("%d", &ID);
     avion_atterri = rechercheID(AVIONS, ID);
 
     if(&avion_atterri != NULL){                         //&avion != NULL parce que s'il y a une adresse c quil existe, sans le & ca marche pas parce que les NULL c bizarre
-        if(cpt < piste_une.max_await_takeoff){         //test si on peut passer sur piste pour aller garage
+        if(cpt < piste_une->max_await_takeoff){         //test si on peut passer sur piste pour aller garage
 
-            if(cpt2 < parking1.maxParking){             //test si place dans le garage 
-                parking1.liste_av = ajouteAvionFin(parking1.liste_av, avion_atterri);                   //Place l'avion dans le garage
+            if(cpt2 < parking1->maxParking){             //test si place dans le garage
+                parking1->liste_av = ajouteAvionFin(parking1->liste_av, avion_atterri);                   //Place l'avion dans le garage
                 printf("\nl'avion a atterri\n\n");
             }
             else{
                 /*faire partir un avion du garage sur la piste*/
-                avion premier_parking = parking1.liste_av->avion; //on stock le 1er avion du parking pour apres lamener sur piste
-                parking1.liste_av = parking1.liste_av->suiv; //lavion est enlever du parking
+                avion premier_parking = parking1->liste_av->avion; //on stock le 1er avion du parking pour apres lamener sur piste
+                parking1->liste_av = parking1->liste_av->suiv; //lavion est enlever du parking
 
-                piste_une.liste_av = ajouteAvionFin(piste_une.liste_av, premier_parking);
+                piste_une->liste_av = ajouteAvionFin(piste_une->liste_av, premier_parking);
 
                 /*faire entrer l'avion dans le garage*/
-                parking1.liste_av = ajouteAvionFin(parking1.liste_av, avion_atterri);
-                printf("\nl'avion a atterri\n\n");             
+                parking1->liste_av = ajouteAvionFin(parking1->liste_av, avion_atterri);
+                printf("\nl'avion a atterri\n\n");
             }
 
         }
 
-        else if(cpt = piste_une.max_await_takeoff){
+        else if(cpt = piste_une->max_await_takeoff){
             /*sort un avion de la piste et on le met en lair*/
-            avion degage_piste = piste_une.liste_av->avion;
-            piste_une.liste_av = piste_une.liste_av->suiv;
-            AVIONS = ajouteAvionFin(AVIONS, degage_piste); 
+            avion degage_piste = piste_une->liste_av->avion;
+            piste_une->liste_av = piste_une->liste_av->suiv;
+            AVIONS = ajouteAvionFin(AVIONS, degage_piste);
 
             /*une fois qu'on a fait decoller un avion, on peut utiliser la piste pour aller au parking si il y a de la place*/
-            if(cpt2 < parking1.maxParking){             //test si place dans le garage 
-                parking1.liste_av = ajouteAvionFin(parking1.liste_av, avion_atterri);                   //Place l'avion dans le garage
+            if(cpt2 < parking1->maxParking){             //test si place dans le garage
+                parking1->liste_av = ajouteAvionFin(parking1->liste_av, avion_atterri);                   //Place l'avion dans le garage
                 printf("\nl'avion a atterri\n\n");
             }
             else{
 
                 /*faire partir un avion du garage sur la piste*/
-                avion premier_parking = parking1.liste_av->avion; //on stock le 1er avion du parking pour apres lamener sur piste
-                parking1.liste_av = parking1.liste_av->suiv; //lavion est enlever du parking
-                
-		 //printParking(parking1); on est good
-		
-                piste_une.liste_av = ajouteAvionFin(piste_une.liste_av, premier_parking);
+                avion premier_parking = parking1->liste_av->avion; //on stock le 1er avion du parking pour apres lamener sur piste
+                parking1->liste_av = parking1->liste_av->suiv; //lavion est enlever du parking
+
+                //printParking(parking1); on est good
+
+                piste_une->liste_av = ajouteAvionFin(piste_une->liste_av, premier_parking);
 
                 /*faire entrer l'avion dans le garage*/
-                parking1.liste_av = ajouteAvionFin(parking1.liste_av, avion_atterri);
-                
-                printParking(parking1);
-                
+                parking1->liste_av = ajouteAvionFin(parking1->liste_av, avion_atterri);
+
+                printParking(*parking1);
+
                 printf("\nl'avion a atterri\n\n");
             }
         }
