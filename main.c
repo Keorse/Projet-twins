@@ -351,7 +351,7 @@ void affiche_Avion(avion avion)
 	printf("\t----------------------------------------------------\n");		
 }
 liste* RetireAvionDebut(liste *Liste){
-    liste deuxiemme_element=liste->suiv;
+    liste* deuxiemme_element=liste->suiv;
     retrurn deuxiemme_element;
 
 }
