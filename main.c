@@ -271,7 +271,7 @@ liste* add_waitlist_piste(piste piste_une, parking parking1){
     }
     int ID;
     avion avion_decollage;
-    printf("quel avion voulez-vous faire atterrir (entrez son id)");
+    printf("quel avion voulez-vous faire décoller? (entrez son id)");
     scanf("%d", &ID);
     avion_decollage = rechercheID(parking1.liste_av, ID);
     if(cpt_piste<piste_une.max_await_takeoff){
