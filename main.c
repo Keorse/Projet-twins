@@ -80,7 +80,13 @@ int main(){
     avionVolent->suiv = NULL;
     
     tetedeliste = avionVolent;
-    atterrissage(piste1, parking1, tetedeliste);
+    
+    
+    piste *pointeurPiste = &piste1;
+    parking *pointeurParking = &parking1;
+    
+    
+    atterrissage(pointeurPiste, pointeurParking, tetedeliste);
     printParking(parking1); 
     return 0;
     
@@ -212,15 +218,11 @@ void atterrissage(piste *piste_une, parking *parking1, liste *AVIONS){
                 avion premier_parking = parking1->liste_av->avion; //on stock le 1er avion du parking pour apres lamener sur piste
                 parking1->liste_av = parking1->liste_av->suiv; //lavion est enlever du parking
 
-                //printParking(parking1); on est good
 
                 piste_une->liste_av = ajouteAvionFin(piste_une->liste_av, premier_parking);
 
                 /*faire entrer l'avion dans le garage*/
                 parking1->liste_av = ajouteAvionFin(parking1->liste_av, avion_atterri);
-
-                printParking(*parking1);
-
                 printf("\nl'avion a atterri\n\n");
             }
         }
@@ -269,7 +271,7 @@ liste* add_waitlist_piste(piste piste_une, parking parking1){
     }
     int ID;
     avion avion_decollage;
-    printf("quel avion voulez-vous mettre sur la piste (entrez son id)");
+    printf("quel avion voulez-vous faire atterrir (entrez son id)");
     scanf("%d", &ID);
     avion_decollage = rechercheID(parking1.liste_av, ID);
     if(cpt_piste<piste_une.max_await_takeoff){
