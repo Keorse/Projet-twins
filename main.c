@@ -34,7 +34,7 @@ typedef struct parking{
 
 
 
-
+void saveListeFichier(avion cel, char* nomFichier) ;
 void loading(char* blabla);
 int compteurPiste(piste piste_une);
 int compteurParking(parking p);
@@ -457,4 +457,16 @@ void loading(char* blabla){
             return;
         }
     }
+}
+void saveListeFichier(avion cel, char* nomFichier) 
+{
+	
+	FILE *fp=NULL;
+	fp=fopen(nomFichier,"a");
+	if(fp!=NULL)
+	{
+			fprintf(fp,"%d %d %d %d\n", cel.id, cel.cat_av, cel.is_parked, cel.nb_passengers);
+			
+	}
+		fclose(fp);	
 }
