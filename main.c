@@ -35,7 +35,7 @@ typedef struct parking{
 
 
 
-
+void loading(char* blabla);
 int compteurPiste(piste piste_une);
 int compteurParking(parking p);
 avion rechercheID(liste *listeAvion, int ID);
@@ -408,4 +408,42 @@ void printPiste(piste p1){
 	printf("\tavion sur la piste :\n");
 	affiche_liste(p1.liste_av);
 
+}
+
+
+void loading(char* blabla){
+    int msec = 0;
+    const int trigger = 500; // ms
+    const int printWidth = 4;
+    int counter = 0;
+    clock_t before = clock();
+
+    while (1)
+    {
+        fputs(blabla, stdout);
+        clock_t difference = clock() - before;
+        msec = difference * 1000 / CLOCKS_PER_SEC;
+        if (msec >= trigger)
+        {
+            counter++;
+            msec = 0;
+            before = clock();
+        }
+        for (int i = 0; i < counter; ++i)
+        {
+            fputc('.', stdout);
+        }
+        for (int i = 0; i < printWidth - counter; ++i)
+        {
+            fputc(' ', stdout);
+        }
+        fputc('\r', stdout);
+        fflush(stdout);
+
+        if (counter == printWidth)
+        {
+            counter = 0;
+            return;
+        }
+    }
 }
