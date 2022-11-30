@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <time.h>
 typedef struct avion{
     int id;// à  verifier a chaque init pour que il soit unique
     int cat_av;//1 av de ligne    2 av affaire     3 av léger
