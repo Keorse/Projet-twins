@@ -36,7 +36,7 @@ typedef struct parking{
 
 
 
-
+parking init_parking(int maxparking);
 int compteurPiste(piste piste_une);
 int compteurParking(parking p);
 avion rechercheID(liste *listeAvion, int ID);
@@ -355,3 +355,11 @@ liste* RetireAvionDebut(liste *Liste){
     return deuxiemme_element;
 
 }
+
+parking init_parking(int maxparking){
+    parking parking1;
+    parking1.maxParking=maxparking;
+    parking1.liste_av=NULL;
+    return parking1;
+}
+
