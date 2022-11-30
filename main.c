@@ -186,7 +186,8 @@ void atterrissage(piste *piste_une, parking *parking1, liste *AVIONS){
 
             if(cpt2 < parking1->maxParking){             //test si place dans le garage
                 parking1->liste_av = ajouteAvionFin(parking1->liste_av, avion_atterri);                   //Place l'avion dans le garage
-                printf("\nl'avion a atterri\n\n");
+                loading("l'avion est en train d'atterrir");
+		printf("\nl'avion a atterri\n\n");
             }
             else{
                 /*faire partir un avion du garage sur la piste*/
@@ -197,6 +198,7 @@ void atterrissage(piste *piste_une, parking *parking1, liste *AVIONS){
 
                 /*faire entrer l'avion dans le garage*/
                 parking1->liste_av = ajouteAvionFin(parking1->liste_av, avion_atterri);
+		loading("l'avion est en train d'atterrir");
                 printf("\nl'avion a atterri\n\n");
             }
 
@@ -211,6 +213,7 @@ void atterrissage(piste *piste_une, parking *parking1, liste *AVIONS){
             /*une fois qu'on a fait decoller un avion, on peut utiliser la piste pour aller au parking si il y a de la place*/
             if(cpt2 < parking1->maxParking){             //test si place dans le garage
                 parking1->liste_av = ajouteAvionFin(parking1->liste_av, avion_atterri);                   //Place l'avion dans le garage
+		loading("l'avion est en train d'atterrir");
                 printf("\nl'avion a atterri\n\n");
             }
             else{
@@ -389,7 +392,7 @@ void printParking(parking p1){
 	int cpt; 
 	cpt = compteurParking(p1);
 	printf("le parking possède %d avion(s)\n", cpt);
-	
+	loading("l'avion est en train d'aller au parking");
 	printf("\tavion dans le parking :\n");
 	affiche_liste(p1.liste_av);
 }
