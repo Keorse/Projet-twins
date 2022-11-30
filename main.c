@@ -352,6 +352,6 @@ void affiche_Avion(avion avion)
 }
 liste* RetireAvionDebut(liste *Liste){
     liste* deuxiemme_element=liste->suiv;
-    retrurn deuxiemme_element;
+    return deuxiemme_element;
 
 }
