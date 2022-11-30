@@ -50,7 +50,7 @@ void decollage(piste piste, liste* air);
 void menu();
 void affiche_Avion(avion avion);
 void printParking(parking);
-
+void printPiste(piste p1);
 
 
 
@@ -87,7 +87,8 @@ int main(){
     
     
     atterrissage(pointeurPiste, pointeurParking, tetedeliste);
-    printParking(parking1); 
+    printParking(parking1);
+    printPiste(piste1);
     return 0;
     
 }
@@ -379,13 +380,32 @@ void affiche_liste(liste *l1){
 		affiche_Avion(tmp->avion); 
 		tmp = tmp->suiv;
 	}
-
+	printf("\n");
 }
 
 void printParking(parking p1){
-	printf("%d\n", p1.maxParking);
+	printf("\n\tINFORMATION SUR LE PARKING\n");
+	printf("max du parking : %d\n", p1.maxParking);
 	int cpt; 
 	cpt = compteurParking(p1);
 	printf("le parking possède %d avion(s)\n", cpt);
+	
+	printf("\tavion dans le parking :\n");
 	affiche_liste(p1.liste_av);
+}
+
+void printPiste(piste p1){
+	printf("\n\tINFORMATION SUR LA PISTE\n"); 
+	printf("num de piste %d\n", p1.num_piste);
+	printf("longueur de piste %f\n", p1.longueur);
+	
+	printf("catégorie de piste %d\n", p1.cat_piste);
+	printf("max de la piste %d\n", p1.max_await_takeoff);
+	
+	if(p1.is_busy ==1) printf("la piste est occupée\n");
+	else if(p1.is_busy ==2) printf("la piste est libre\n");
+	
+	printf("\tavion sur la piste :\n");
+	affiche_liste(p1.liste_av);
+
 }
