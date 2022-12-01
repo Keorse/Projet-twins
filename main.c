@@ -52,7 +52,9 @@ void affiche_liste(liste *l1);
 void affiche_Avion(avion avion);
 void printParking(parking);
 void printPiste(piste p1);
-
+void print_piste(int avionpiste,int numpiste);
+void print_air(int avionair);
+void prin_garage(int aviongarage);
 
 
 int main(){
@@ -489,4 +491,39 @@ void saveListeFichier(avion cel, char* nomFichier)
 			
 	}
 		fclose(fp);	
+}
+void prin_garage(int aviongarage){
+    char* tmp;
+    tmp=NULL;
+    tmp=calloc(1,sizeof(char)*30);
+    char* tmp_escpace;
+    tmp_escpace=NULL;
+    tmp_escpace=calloc(1,sizeof(char)*30);
+    char* tmp_toit;
+    tmp_toit=NULL;
+    tmp_toit=calloc(1,sizeof(char)*30);
+    for (int i = 0; i < aviongarage; ++i) {
+        tmp= strcat(tmp," (ooo} ");
+        tmp_escpace=strcat(tmp_escpace,"       ");
+        tmp_toit=strcat(tmp_toit,"_________");
+    }
+    printf("\t      Garage\n\t_%s_\n\t |%s|\n\t |%s|\n",tmp_toit,tmp_escpace,tmp);
+}
+void print_air(int avionair){
+    char* air;
+    air=NULL;
+    air=calloc(1,sizeof(char)*30);
+    for (int i = 0; i < avionair; ++i) {
+        air= strcat(air,"(ooo} ");
+    }
+    printf("%s\n\n",air);
+}
+void print_piste(int avionpiste,int numpiste){
+    char* tmp;
+    tmp=NULL;
+    tmp=calloc(1,sizeof(char)*30);
+    for (int i = 0; i < avionpiste; ++i) {
+        tmp= strcat(tmp,"(ooo}  ");
+    }
+    printf("\n\n\t \t piste %d \n\t  ----------------------------------------------\n\t/   ==   ==   == %s\n\t----------------------------------------------------\n",numpiste,tmp);
 }
