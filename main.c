@@ -39,7 +39,9 @@ avion init_avion(int id,int cat_av, int is_flying , int nb_passaers);
 void print_avion(avion avion);
 piste init_piste(int num_piste, float longueur, int cat_piste, int max_await);
 avion init_avion(int id,int cat_av, int is_flying , int nb_passaers);
-
+void print_piste(int avionpiste,int numpiste);
+void print_air(int avionair);
+    
 int main() {
     piste piste_une=init_piste(1, 3000, 1, 10);
 
