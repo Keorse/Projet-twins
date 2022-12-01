@@ -159,3 +159,24 @@ void print_avion(avion avion){
     printf("is_flying:%d\n",avion.is_parked);
     printf("passagers de l'avion:%d\n",avion.nb_passengers);
 }
+
+
+void print_air(int avionair){
+    char* air;
+    air=NULL;
+    air=calloc(1,sizeof(char)*30);
+    for (int i = 0; i < avionair; ++i) {
+        air= strcat(air,"(ooo} ");
+    }
+    printf("%s\n\n",air);
+}
+void print_piste(int avionpiste,int numpiste){
+    char* tmp;
+    tmp=NULL;
+    tmp=calloc(1,sizeof(char)*30);
+    for (int i = 0; i < avionpiste; ++i) {
+        tmp= strcat(tmp,"(ooo}  ");
+    }
+    printf("\n\n\t \t piste %d \n\t  ----------------------------------------------\n\t/   ==   ==   == %s\n\t----------------------------------------------------\n",numpiste,tmp);
+}
+
