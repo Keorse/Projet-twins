@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include<math.h>
 
 #define NOIR 1
 #define ROUGE 2
@@ -45,6 +46,7 @@ typedef struct parking
     liste *liste_av;
 } parking;
 
+avion  creerAvion(avion avion1);
 void saveListeFichier(avion cel, char *nomFichier);
 void loading(char *blabla);
 int compteurPiste(piste piste_une);
@@ -71,7 +73,7 @@ void couleur_char(char c);
 
 int main(void)
 {
-
+	menu();
     couleur_char(BLANC);
 
     avion avion1;
@@ -363,7 +365,9 @@ void decollage(piste *Piste, liste **air)
 }
 void menu(void)
 {
-    int a = 0, j = 0;
+
+    int a = 0, j = 0, cat=0;
+    avion avion1;
     while (j == 0)
     {
         printf(" \t=================================================\n");
@@ -384,17 +388,142 @@ void menu(void)
             break;
         case 2:
             //	attribue_valeur_avion();// dedans on crée un avion lui donne des valeur et on rentre dans un fichier
-            system("clear");
+            avion1=creerAvion(avion1);
+            affiche_Avion(avion1);
+        while(avion1.cat_av!=1 || avion1.cat_av!=2 || avion1.cat_av!=3)
+	{
+		
+		scanf("%d", &cat);
+		if(avion1.cat_av==1)
+		{
+			saveListeFichier(avion1, "categorie1.txt") ; 
+			system("clear");
+			break;		
+		}
+		if(avion1.cat_av==2)
+		{
+			saveListeFichier(avion1, "categorie2.txt") ; 	
+			system("clear");
+			break;	
+		}
+		if(avion1.cat_av==3)
+		{
+			saveListeFichier(avion1, "categorie3.txt") ; 
+			system("clear");
+			break;	
+		}
+	}
+           
 
-            break;
+            
         case 3:
             j = -1;
             break;
         default:
-            // printf("ce choix n'est pas disponible");
+            printf("ce choix n'est pas disponible");
             break;
         }
     }
+}
+avion  creerAvion(avion avion1)
+{
+	int id=500;
+	srand(time(NULL));
+	FILE *fp=NULL;
+	
+	printf("\t----------------------------------------------------\n");
+	couleur_char(BLANC);
+      couleur_char(BLEU);
+      printf("\t\tCREATION DE L'AVION:\n");
+      couleur_char(BLANC);
+       do 
+       {
+       	 printf("\tquelle est la catégorie de l'avion\n");
+       	 printf("\t1: avion de ligne\n\t2:avion d'affaires\n\t3:avion léger\n");
+       	 scanf("%d", &avion1.cat_av);
+       	/* if(avion1.cat_av>3)
+       	 {
+       	 	printf("cette catégorie n'est pas disponible");
+       	 }*/
+      }while(avion1.cat_av<1 && avion1.cat_av>3);
+      printf("pr");
+       switch(avion1.cat_av)
+       {
+       	case 1:
+       	// parcourir id de fichier catégorie 1 et voir si id différent 
+       		do
+       		{
+       			fp=fopen("categorie1.txt", "r");
+       			avion1.id=(rand() % (100 - 0 + 1)) + 0;
+       			for(int i=0;i<100;i++)
+       			{
+       			//	fseek(fp, i, SEEK_SET);
+       				id = fscanf(fp,"%d\n", &id);
+       				if(id==avion1.id)
+       				{
+       					i=101;
+       				}
+       				i++;
+       			}
+				
+       			
+       		}while(avion1.id==id);
+       		saveListeFichier(avion1, "categorie1.txt");
+       		
+       		break;
+       		
+       	case 2:
+       	do
+       		{
+       			fp=fopen("categorie2.txt", "r");
+       			avion1.id=(rand() % (100 - 0 + 1)) + 0;
+       			for(int i=0;i<100;i++)
+       			{
+       				
+       			//	fseek(fp, i, SEEK_SET);
+       				id = fscanf(fp,"%d\n", &id);
+       				if(id==avion1.id)
+       				{
+       					i=101;
+       				}
+       				i++;
+       			}
+				
+       			
+       		}while(avion1.id==id);
+       		saveListeFichier(avion1, "categorie2.txt");
+       		
+       		break;
+       		
+       	default:
+       	do
+       		{
+       			fp=fopen("categorie3.txt", "r");
+       			avion1.id=(rand() % (100 - 0 + 1)) + 0;
+       			for(int i=1;i<100;i++)
+       			{
+       			//	fseek(fp, i, SEEK_SET);
+       				id = fscanf(fp,"%d\n", &id);
+       				if(id==avion1.id)
+       				{
+       					i=101;
+       				}
+       				i++;
+       				
+       			}
+				
+       			
+       		}while(avion1.id==id);
+       		saveListeFichier(avion1, "categorie3.txt");
+       		
+       		break;
+       		
+       }
+     avion1.is_parked=1;
+     avion1.nb_passengers=rand()%100;
+     return avion1;
+   //  printf("\tquelle est le nom de l'avion");
+    // scanf("%s", 
 }
 void affiche_Avion(avion avion)
 {
