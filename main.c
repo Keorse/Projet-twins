@@ -366,10 +366,11 @@ void decollage(piste *Piste, liste **air)
 void menu(void)
 {
 
-    int a = 0, j = 0, cat=0;
+    int a = 0, j = 0;
     avion avion1;
     while (j == 0)
     {
+    	  a=0;
         printf(" \t=================================================\n");
         printf("\t\tBIENVENUE DANS L'AEROPORT ONE PISTE\n");
         printf("\t=================================================\n");
@@ -379,45 +380,36 @@ void menu(void)
         printf("\t(1) - Lancer une simulation\n\t(2) - Ajouter un avion dans la base de données\n\t(3) - Quitter\n");
         printf("\t----------------------------------------------------\n");
         scanf("%d", &a);
+        printf("%d", a);
         switch (a)
         {
         case 1:
             // lancer la simulation
             system("clear");
-
+		
+		loading(" ...");
             break;
         case 2:
             //	attribue_valeur_avion();// dedans on crée un avion lui donne des valeur et on rentre dans un fichier
-            avion1=creerAvion(avion1);
-            affiche_Avion(avion1);
-        while(avion1.cat_av!=1 || avion1.cat_av!=2 || avion1.cat_av!=3)
-	{
-		
-		scanf("%d", &cat);
-		if(avion1.cat_av==1)
-		{
-			saveListeFichier(avion1, "categorie1.txt") ; 
-			system("clear");
-			break;		
-		}
-		if(avion1.cat_av==2)
-		{
-			saveListeFichier(avion1, "categorie2.txt") ; 	
-			system("clear");
-			break;	
-		}
-		if(avion1.cat_av==3)
-		{
-			saveListeFichier(avion1, "categorie3.txt") ; 
-			system("clear");
-			break;	
-		}
-	}
            
-
-            
+		do 
+		{
+			 avion1=creerAvion(avion1);
+           
+			if(avion1.cat_av==1 || avion1.cat_av==2 || avion1.cat_av==3)
+			{
+				affiche_Avion(avion1);
+				loading(" ...");
+				system("clear");
+			}
+			else{
+				printf("catégorie non disponible");
+			}
+		}while(avion1.cat_av!=1 && avion1.cat_av!=2 && avion1.cat_av!=3);
+	
+	break;	      
         case 3:
-            j = -1;
+            j +=1;
             break;
         default:
             printf("ce choix n'est pas disponible");
@@ -457,8 +449,8 @@ avion  creerAvion(avion avion1)
        			avion1.id=(rand() % (100 - 0 + 1)) + 0;
        			for(int i=0;i<100;i++)
        			{
-       			//	fseek(fp, i, SEEK_SET);
-       				id = fscanf(fp,"%d\n", &id);
+       				fseek(fp, i, SEEK_SET);
+       				id = fscanf(fp,"%d", &id);
        				if(id==avion1.id)
        				{
        					i=101;
@@ -468,6 +460,8 @@ avion  creerAvion(avion avion1)
 				
        			
        		}while(avion1.id==id);
+       		avion1.is_parked=1;
+    			avion1.nb_passengers=rand()%100;
        		saveListeFichier(avion1, "categorie1.txt");
        		
        		break;
@@ -491,11 +485,13 @@ avion  creerAvion(avion avion1)
 				
        			
        		}while(avion1.id==id);
+       		avion1.is_parked=1;
+     			avion1.nb_passengers=rand()%100;
        		saveListeFichier(avion1, "categorie2.txt");
        		
        		break;
        		
-       	default:
+       	case 3:
        	do
        		{
        			fp=fopen("categorie3.txt", "r");
@@ -510,17 +506,17 @@ avion  creerAvion(avion avion1)
        				}
        				i++;
        				
-       			}
-				
-       			
+       			}	
        		}while(avion1.id==id);
+       		avion1.is_parked=1;
+     			avion1.nb_passengers=rand()%100;
        		saveListeFichier(avion1, "categorie3.txt");
-       		
+       		break;
+       	default: 
        		break;
        		
        }
-     avion1.is_parked=1;
-     avion1.nb_passengers=rand()%100;
+     
      return avion1;
    //  printf("\tquelle est le nom de l'avion");
     // scanf("%s", 
@@ -669,6 +665,7 @@ void saveListeFichier(avion cel, char *nomFichier)
 
     FILE *fp = NULL;
     fp = fopen(nomFichier, "a");
+  //  printf(" rentre dans save%d %d %d %d", cel.id, cel.cat_av, cel.is_parked, cel.nb_passengers);
     if (fp != NULL)
     {
         fprintf(fp, "%d %d %d %d\n", cel.id, cel.cat_av, cel.is_parked, cel.nb_passengers);
