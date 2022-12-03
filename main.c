@@ -46,6 +46,8 @@ typedef struct parking
     liste *liste_av;
 } parking;
 
+int verif_avion(avion avion1,char fichier[50],int id);
+avion save_Verif(avion avion1);
 avion  creerAvion(avion avion1);
 void saveListeFichier(avion cel, char *nomFichier);
 void loading(char *blabla);
@@ -400,7 +402,7 @@ void menu(void)
 			{
 				affiche_Avion(avion1);
 				loading(" ...");
-				system("clear");
+			//	system("clear");
 			}
 			else{
 				printf("catégorie non disponible");
@@ -419,9 +421,8 @@ void menu(void)
 }
 avion  creerAvion(avion avion1)
 {
-	int id=500;
 	srand(time(NULL));
-	FILE *fp=NULL;
+	
 	
 	printf("\t----------------------------------------------------\n");
 	couleur_char(BLANC);
@@ -438,86 +439,22 @@ avion  creerAvion(avion avion1)
        	 	printf("cette catégorie n'est pas disponible");
        	 }*/
       }while(avion1.cat_av<1 && avion1.cat_av>3);
-      printf("pr");
        switch(avion1.cat_av)
        {
        	case 1:
        	// parcourir id de fichier catégorie 1 et voir si id différent 
-       		do
-       		{
-       		
-       			fp=fopen("categorie1.txt", "r");
-       			if(fp!=NULL)
-       			{
-       				avion1.id=(rand() % (100 - 0 + 1)) + 0;
-	       			for(int i=0;i<100;i++)
-	       			{
-	       				fseek(fp, i, SEEK_SET);
-	       				id = fscanf(fp,"%d", &id);
-	       				if(id==avion1.id)
-	       				{
-	       					i=101;
-	       				}
-	       				i++;
-	       			}
-       			}	
-       		}while(avion1.id==id);
-       		avion1.is_parked=1;
-    			avion1.nb_passengers=rand()%100;
+       		avion1=save_Verif(avion1);
        		saveListeFichier(avion1, "categorie1.txt");
-       		
        		break;
        		
        	case 2:
-       	do
-       		{
-       			fp=fopen("categorie2.txt", "r");
-       			
-       			if(fp!=NULL)
-       			{
-       				avion1.id=(rand() % (100 - 0 + 1)) + 0;
-	       			for(int i=0;i<100;i++)
-	       			{
-	       				fseek(fp, i, SEEK_SET);
-	       				id = fscanf(fp,"%d", &id);
-	       				if(id==avion1.id)
-	       				{
-	       					i=101;
-	       				}
-	       				i++;
-	       			}
-       			}	
-       			
-       		}while(avion1.id==id);
-       		avion1.is_parked=1;
-     			avion1.nb_passengers=rand()%100;
+	       	avion1=save_Verif(avion1);
        		saveListeFichier(avion1, "categorie2.txt");
-       		
-       		break;
-       		
+       		break;       		
        	case 3:
-       	do
-       		{
-       			fp=fopen("categorie3.txt", "r");
-       			if(fp!=NULL)
-       			{
-       				avion1.id=(rand() % (100 - 0 + 1)) + 0;
-	       			for(int i=0;i<100;i++)
-	       			{
-	       				fseek(fp, i, SEEK_SET);
-	       				id = fscanf(fp,"%d", &id);
-	       				if(id==avion1.id)
-	       				{
-	       					i=101;
-	       				}
-	       				i++;
-	       			}
-       			}	
-       		}while(avion1.id==id);
-       		avion1.is_parked=1;
-     			avion1.nb_passengers=rand()%100;
+       		avion1=save_Verif(avion1);
        		saveListeFichier(avion1, "categorie3.txt");
-       		break;
+       		break;  
        	default: 
        		break;
        		
@@ -526,6 +463,46 @@ avion  creerAvion(avion avion1)
      return avion1;
    //  printf("\tquelle est le nom de l'avion");
     // scanf("%s", 
+}
+
+avion save_Verif(avion avion1)
+{
+	srand(time(NULL));
+	int id1=500, id2=500, id3=500;
+	do
+       {	
+       	avion1.id=(rand() % (10 - 0 + 1)) + 0;
+		
+		id1=verif_avion(avion1,"categorie1.txt" ,id1);
+		id2=verif_avion(avion1,"categorie2.txt",id2 );
+		id3=verif_avion(avion1,"categorie3.txt",id3 );
+       }while(avion1.id==id1 || avion1.id==id2 || avion1.id==id3);
+	avion1.is_parked=1;
+    	avion1.nb_passengers=rand()%100;
+	return avion1;
+}
+
+int verif_avion(avion avion1,char fichier[50],int id)
+{
+	int a,b,c;
+	FILE *fp=NULL;
+	fp=fopen(fichier, "r");
+	if(fp!=NULL)
+		{
+			for(int i=0;i<10;i++)
+			{
+				fseek(fp, 4*i, SEEK_SET);
+				fscanf(fp,"%d %d %d %d", &id, &b,&a,&c);
+				if(id==avion1.id)
+				{
+					break;
+				}
+				printf("avion: %d  id :%d\n",avion1.id, id);	
+
+			}
+		}
+	fclose(fp);
+	return id;
 }
 void affiche_Avion(avion avion)
 {
