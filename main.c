@@ -445,20 +445,22 @@ avion  creerAvion(avion avion1)
        	// parcourir id de fichier catégorie 1 et voir si id différent 
        		do
        		{
+       		
        			fp=fopen("categorie1.txt", "r");
-       			avion1.id=(rand() % (100 - 0 + 1)) + 0;
-       			for(int i=0;i<100;i++)
+       			if(fp!=NULL)
        			{
-       				fseek(fp, i, SEEK_SET);
-       				id = fscanf(fp,"%d", &id);
-       				if(id==avion1.id)
-       				{
-       					i=101;
-       				}
-       				i++;
-       			}
-				
-       			
+       				avion1.id=(rand() % (100 - 0 + 1)) + 0;
+	       			for(int i=0;i<100;i++)
+	       			{
+	       				fseek(fp, i, SEEK_SET);
+	       				id = fscanf(fp,"%d", &id);
+	       				if(id==avion1.id)
+	       				{
+	       					i=101;
+	       				}
+	       				i++;
+	       			}
+       			}	
        		}while(avion1.id==id);
        		avion1.is_parked=1;
     			avion1.nb_passengers=rand()%100;
@@ -470,19 +472,21 @@ avion  creerAvion(avion avion1)
        	do
        		{
        			fp=fopen("categorie2.txt", "r");
-       			avion1.id=(rand() % (100 - 0 + 1)) + 0;
-       			for(int i=0;i<100;i++)
+       			
+       			if(fp!=NULL)
        			{
-       				
-       			//	fseek(fp, i, SEEK_SET);
-       				id = fscanf(fp,"%d\n", &id);
-       				if(id==avion1.id)
-       				{
-       					i=101;
-       				}
-       				i++;
-       			}
-				
+       				avion1.id=(rand() % (100 - 0 + 1)) + 0;
+	       			for(int i=0;i<100;i++)
+	       			{
+	       				fseek(fp, i, SEEK_SET);
+	       				id = fscanf(fp,"%d", &id);
+	       				if(id==avion1.id)
+	       				{
+	       					i=101;
+	       				}
+	       				i++;
+	       			}
+       			}	
        			
        		}while(avion1.id==id);
        		avion1.is_parked=1;
@@ -495,17 +499,19 @@ avion  creerAvion(avion avion1)
        	do
        		{
        			fp=fopen("categorie3.txt", "r");
-       			avion1.id=(rand() % (100 - 0 + 1)) + 0;
-       			for(int i=1;i<100;i++)
+       			if(fp!=NULL)
        			{
-       			//	fseek(fp, i, SEEK_SET);
-       				id = fscanf(fp,"%d\n", &id);
-       				if(id==avion1.id)
-       				{
-       					i=101;
-       				}
-       				i++;
-       				
+       				avion1.id=(rand() % (100 - 0 + 1)) + 0;
+	       			for(int i=0;i<100;i++)
+	       			{
+	       				fseek(fp, i, SEEK_SET);
+	       				id = fscanf(fp,"%d", &id);
+	       				if(id==avion1.id)
+	       				{
+	       					i=101;
+	       				}
+	       				i++;
+	       			}
        			}	
        		}while(avion1.id==id);
        		avion1.is_parked=1;
