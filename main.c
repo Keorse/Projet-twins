@@ -75,7 +75,7 @@ void print_garage(int aviongarage);
 void couleur_char(char c);
 
 int main(void)
-{/*
+{
   piste pisteg = init_piste(3, 90, 3, 1);
     piste pistem = init_piste(2, 90, 2, 1);
     piste pistep = init_piste(1, 90, 1, 1);
@@ -90,13 +90,13 @@ int main(void)
     piste *PISTEg = &pisteg;
     piste *PISTEm = &pistem;
     piste *PISTEp = &pistep;
-    parking *PARKING = &parking1;*/
+    parking *PARKING = &parking1;
     
     //creerDATABASE("fichier.txt");
 
    
  
-/*
+
 	initialisation("fichier.txt", PISTEg, PISTEm, PISTEp, PARKING, &LISTEenVol);
 	
 	printf("pisteg\n");
@@ -108,7 +108,7 @@ int main(void)
 	affiche_liste(pistep.liste_av);
 	
 	printf("vol\n");
-	affiche_liste(LISTEenVol);*/
+	affiche_liste(LISTEenVol);
 	//menu();
     
     
@@ -688,11 +688,15 @@ void initialisation(char *nomFichier, piste *PISTEg, piste *PISTEm, piste *PISTE
     liste *parcour = LISTE;
     while (parcour != NULL)
     {
-        if (parcour->avion.is_parked == 0)
+        if (parcour->avion.is_parked == 1)
         {
-            *ENVOL = ajouteAvionFin(*ENVOL, parcour->avion);
+            if ( (*ENVOL)->avion.id == 0 && (*ENVOL)->avion.nb_passengers == 0)
+            {
+                (*ENVOL)->avion = parcour->avion;
+            }         
+            else *ENVOL = ajouteAvionFin(*ENVOL, parcour->avion);
         }
-        else if (parcour->avion.is_parked != 0)
+        else if (parcour->avion.is_parked == 0)
         {
             int cpt1 = compteurPiste(*PISTEg);
             int cpt2 = compteurPiste(*PISTEm);
@@ -700,9 +704,9 @@ void initialisation(char *nomFichier, piste *PISTEg, piste *PISTEm, piste *PISTE
 
             if (parcour->avion.cat_av == 1) //avion de ligne
             {   
-                if (cpt1 == 0)      //sinon ca garde l'avion avec des valeur 0
+                if (PISTEg->liste_av->avion.id == 0 && PISTEg->liste_av->avion.nb_passengers == 0)      //c'est les valeurs d'un avion quand on fait liste* unliste = NULL
                 {
-                    PISTEg->liste_av->avion = parcour->avion;
+                    PISTEg->liste_av->avion = parcour->avion;           //dans ce cas on remplace l'avion null
                 }
                 else{
                     PISTEg->liste_av = ajouteAvionFin(PISTEg->liste_av, parcour->avion); //on ajoute 
@@ -711,7 +715,7 @@ void initialisation(char *nomFichier, piste *PISTEg, piste *PISTEm, piste *PISTE
             }
             else if (parcour->avion.cat_av == 2) //avion de moyen
             {   
-                if (cpt2 == 0)
+                if (PISTEm->liste_av->avion.id == 0 && PISTEm->liste_av->avion.nb_passengers == 0)     //c'est les valeurs d'un avion quand on fait liste* unliste = NULL
                 {
                     PISTEm->liste_av->avion = parcour->avion;
                 }
@@ -724,7 +728,7 @@ void initialisation(char *nomFichier, piste *PISTEg, piste *PISTEm, piste *PISTE
             }
             else if (parcour->avion.cat_av == 3) //avion de leger
             {
-                if (cpt3 == 0)
+                if (PISTEp->liste_av->avion.id == 0 && PISTEp->liste_av->avion.nb_passengers == 0)  //c'est les valeurs d'un avion quand on fait liste* unliste = NULL
                 {
                      PISTEp->liste_av->avion = parcour->avion;
                 }
