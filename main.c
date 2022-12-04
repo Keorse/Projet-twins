@@ -46,12 +46,20 @@ typedef struct parking
     liste *liste_av;
 } parking;
 
+
 void creerDATABASE(char *nomFichier);
 liste* openDATABASE(char *nomFichier);
 void initialisation(char *nomFichier, piste *PISTEg, piste *PISTEm, piste *PISTEp, parking *PARKING, liste **ENVOL);
-avion  creerAvion(avion avion1);
 void sauvegardeFichier(liste*, char *nomFichier);
+
+
+
 void loading(char *blabla);
+void menu();
+void simulation(char *nomFichier);
+
+
+avion  creerAvion(avion avion1);
 int compteurPiste(piste piste_une);
 int compteurParking(parking p);
 avion rechercheID(liste **listeAvion, int ID);
@@ -63,7 +71,6 @@ parking init_parking(int maxparking);
 liste *add_waitlist_piste(piste piste_une, parking parking1); // retourne la liste d'attente de la piste donée en parametre
 liste *RetireAvionDebut(liste *Liste);
 void decollage(piste *Piste, liste **air);
-void menu();
 void affiche_liste(liste *l1);
 void affiche_Avion(avion avion);
 void printParking(parking);
@@ -75,8 +82,15 @@ void print_garage(int aviongarage);
 void couleur_char(char c);
 
 int main(void)
-{
-  piste pisteg = init_piste(3, 90, 3, 1);
+{   
+	menu();
+    couleur_char(BLANC);
+    
+    return 0;
+}
+
+void simulation(char *nomFichier){
+    piste pisteg = init_piste(3, 90, 3, 1);
     piste pistem = init_piste(2, 90, 2, 1);
     piste pistep = init_piste(1, 90, 1, 1);
     
@@ -92,12 +106,7 @@ int main(void)
     piste *PISTEp = &pistep;
     parking *PARKING = &parking1;
     
-    //creerDATABASE("fichier.txt");
-
-   
- 
-
-	initialisation("fichier.txt", PISTEg, PISTEm, PISTEp, PARKING, &LISTEenVol);
+	initialisation(nomFichier, PISTEg, PISTEm, PISTEp, PARKING, &LISTEenVol);
 	
 	printf("pisteg\n");
 	
@@ -109,50 +118,14 @@ int main(void)
 	
 	printf("vol\n");
 	affiche_liste(LISTEenVol);
-	//menu();
-    
-    
-    
-    /*  ancien main
-    couleur_char(BLANC);
-
-    avion avion1;
-    avion1 = init_avion(1, 1, 10);
-
-    avion avion2 = init_avion(2, 1, 20);
-    avion avion3 = init_avion(3, 1, 10);
-    piste piste1 = init_piste(3, 90, 3, 1);
-
-    piste1.liste_av->avion = avion2;
-
-    parking parking1;
-    parking1.maxParking = 1;
-    parking1.liste_av = NULL;
-    parking1.liste_av = malloc(sizeof(liste));
-    parking1.liste_av->avion = avion3;
-
-    liste *tetedeliste = NULL;
-    liste *avionVolent;
-    avionVolent = malloc(sizeof(liste));
-    avionVolent->avion = avion1;
-    avionVolent->suiv = NULL;
-
-    tetedeliste = avionVolent;
-
-    piste *pointeurPiste = &piste1;
-    parking *pointeurParking = &parking1;
-
-    //atterrissage(pointeurPiste, pointeurParking, &tetedeliste);
-    printParking(parking1);
-    printf("\n");
-    printPiste(piste1);
-
-    printf("Affichage de la liste\n");
-    affiche_liste(tetedeliste);
-    */
-    couleur_char(BLANC);
-    
-    return 0;
+	
+	//faire un switch pour faire decoler ou atterrir des avions
+	
+	
+	
+	
+	
+	//system("clear");
 }
 
 int compteurPiste(piste piste_une)
@@ -410,7 +383,7 @@ void menu(void)
 {
 
     int a = 0, j = 0;
-    avion avion1;
+    system("clear");
     while (j == 0)
     {
     	  a=0;
@@ -420,37 +393,22 @@ void menu(void)
 
         printf("\t----------------------------------------------------\n");
         printf("\tQue voulez-vous faire:\n\n");
-        printf("\t(1) - Lancer une simulation\n\t(2) - Ajouter un avion dans la base de données\n\t(3) - Quitter\n");
+        printf("\t(1) - Lancer une simulation\n\t(2) - Créer une base de données\n\t(3) - Quitter\n");
         printf("\t----------------------------------------------------\n");
         scanf("%d", &a);
-        printf("%d", a);
         switch (a)
         {
         case 1:
-            // lancer la simulation
             system("clear");
-
-		loading(" ...");
+            loading(" ...");
+            printf("depuis quelle base de données voulez-vous lancer la simulation? (ex: fichier.txt\n");
+            char *nomFichier = malloc(sizeof(char)); 
+            scanf("%s", nomFichier);
+            simulation(nomFichier);
             break;
         case 2:
-            //	attribue_valeur_avion();// dedans on crée un avion lui donne des valeur et on rentre dans un fichier
-
-		do 
-		{
-			 avion1=creerAvion(avion1);
-
-			if(avion1.cat_av==1 || avion1.cat_av==2 || avion1.cat_av==3)
-			{
-				affiche_Avion(avion1);
-				loading(" ...");
-			//	system("clear");
-			}
-			else{
-				printf("catégorie non disponible");
-			}
-		}while(avion1.cat_av!=1 && avion1.cat_av!=2 && avion1.cat_av!=3);
-
-	break;	      
+            creerDATABASE("fichier.txt");
+            break;	      
         case 3:
             j +=1;
             break;
@@ -484,11 +442,11 @@ avion  creerAvion(avion avion1)
     scanf("%d", &avion1.nb_passengers);
     do 
     {
-        printf("\tL'avion est au sol(0) ou en vol(1) ?\n");
+        printf("\tL'avion est au sol(0), en vol(1) ou au parking(2) ?\n");
        	scanf("%d", &avion1.is_parked);
-       	if(avion1.is_parked>1 && avion1.is_parked<0)
+       	if(avion1.is_parked>2 && avion1.is_parked<0)
        	{
-       	    printf("cette catégorie n'est pas disponible");
+       	    printf("ce choix n'est pas disponible");
        	}
     }while(avion1.is_parked<0 && avion1.is_parked>1);
     return avion1; 
@@ -690,7 +648,7 @@ void initialisation(char *nomFichier, piste *PISTEg, piste *PISTEm, piste *PISTE
     {
         if (parcour->avion.is_parked == 1)
         {
-            if ( (*ENVOL)->avion.id == 0 && (*ENVOL)->avion.nb_passengers == 0)
+            if ( (*ENVOL)->avion.id == 0 && (*ENVOL)->avion.nb_passengers == 0)     //c'est les valeurs d'un avion quand on fait liste* unliste = NULL
             {
                 (*ENVOL)->avion = parcour->avion;
             }         
@@ -738,6 +696,16 @@ void initialisation(char *nomFichier, piste *PISTEg, piste *PISTEm, piste *PISTE
                     else if (cpt3 == cpt2) PISTEp->liste_av = ajouteAvionFin(PISTEp->liste_av, parcour->avion);
                 }                
             }    
+        }
+        else if (parcour->avion.is_parked == 2)
+        {
+            if (PARKING->liste_av->avion.id == 0 && PARKING->liste_av->avion.nb_passengers == 0)    //c'est les valeurs d'un avion quand on fait liste* unliste = NULL
+            {
+                PARKING->liste_av->avion = parcour->avion;
+            }
+            else{
+                PARKING->liste_av = ajouteAvionFin(PARKING->liste_av, parcour->avion);
+            }           
         }
         parcour = parcour->suiv;       
     } 
