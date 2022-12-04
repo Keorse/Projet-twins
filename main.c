@@ -46,6 +46,7 @@ typedef struct parking
     liste *liste_av;
 } parking;
 
+void creerDATABASE(char *nomFichier);
 liste* openDATABASE(char *nomFichier);
 void initialisation(char *nomFichier, piste *PISTEg, piste *PISTEm, piste *PISTEp, parking *PARKING, liste **ENVOL);
 avion  creerAvion(avion avion1);
@@ -75,9 +76,9 @@ void couleur_char(char c);
 
 int main(void)
 {
-    piste pisteg = init_piste(3, 90, 3, 1);
-    piste pistem = init_piste(3, 90, 2, 1);
-    piste pistep = init_piste(3, 90, 1, 1);
+  piste pisteg = init_piste(3, 90, 3, 1);
+    piste pistem = init_piste(2, 90, 2, 1);
+    piste pistep = init_piste(1, 90, 1, 1);
     
     parking parking1;
     parking1.maxParking = 1;
@@ -90,9 +91,24 @@ int main(void)
     piste *PISTEm = &pistem;
     piste *PISTEp = &pistep;
     parking *PARKING = &parking1;
+    
+    //creerDATABASE("fichier.txt");
+   
+ 
 
-	initialisation("database", PISTEg, PISTEm, PISTEp, PARKING, &LISTEenVol);
-	menu();
+	initialisation("fichier.txt", PISTEg, PISTEm, PISTEp, PARKING, &LISTEenVol);
+	
+	printf("pisteg\n");
+	
+	affiche_liste(pisteg.liste_av);
+	printf("pistem\n");
+	affiche_liste(pistem.liste_av);
+	printf("pistep\n");
+	affiche_liste(pistep.liste_av);
+	
+	printf("vol\n");
+	affiche_liste(LISTEenVol);
+	//menu();
     
     
     
@@ -464,7 +480,7 @@ avion  creerAvion(avion avion1)
        	}
     }while(avion1.cat_av<1 && avion1.cat_av>3);
     printf("\tEntrer son nombre de passagers :\n");
-    scanf("%d", avion1.nb_passengers);
+    scanf("%d", &avion1.nb_passengers);
     do 
     {
         printf("\tL'avion est au sol(0) ou en vol(1) ?\n");
@@ -644,8 +660,7 @@ liste* openDATABASE(char *nomFichier){
         {
             fread(parcour, sizeof(liste), 1, fichier);
             parcour = parcour->suiv;
-        }
-        affiche_liste(LISTE);  
+        } 
         fclose(fichier); 
         return LISTE;
     }
@@ -656,7 +671,7 @@ liste* openDATABASE(char *nomFichier){
 }
 
 void initialisation(char *nomFichier, piste *PISTEg, piste *PISTEm, piste *PISTEp, parking *PARKING, liste **ENVOL){
-
+	
     PISTEg->liste_av = NULL;
     PISTEm->liste_av = NULL;
     PISTEp->liste_av = NULL;
@@ -683,20 +698,40 @@ void initialisation(char *nomFichier, piste *PISTEg, piste *PISTEm, piste *PISTE
             int cpt3 = compteurPiste(*PISTEp);
 
             if (parcour->avion.cat_av == 1) //avion de ligne
-            {
-                PISTEg->liste_av = ajouteAvionFin(PISTEg->liste_av, parcour->avion); //on ajoute 
+            {   
+                if (cpt1 == 0)      //sinon ca garde l'avion avec des valeur 0
+                {
+                    PISTEg->liste_av->avion = parcour->avion;
+                }
+                else{
+                    PISTEg->liste_av = ajouteAvionFin(PISTEg->liste_av, parcour->avion); //on ajoute 
+                }
                 parcour = parcour->suiv;
             }
             else if (parcour->avion.cat_av == 2) //avion de moyen
-            {
-                if (cpt3 < cpt2 && cpt3 < cpt1) PISTEp->liste_av = ajouteAvionFin(PISTEp->liste_av, parcour->avion);
-                else if (cpt2 < cpt3 && cpt2 < cpt1) PISTEm->liste_av = ajouteAvionFin(PISTEm->liste_av, parcour->avion);
-                else if (cpt1 < cpt2 && cpt1 < cpt3) PISTEg->liste_av = ajouteAvionFin(PISTEg->liste_av, parcour->avion);
+            {   
+                if (cpt2 == 0)
+                {
+                    PISTEm->liste_av->avion = parcour->avion;
+                }
+                else{
+                    if (cpt3 < cpt2 && cpt3 < cpt1) PISTEp->liste_av = ajouteAvionFin(PISTEp->liste_av, parcour->avion);
+                    else if (cpt2 < cpt3 && cpt2 < cpt1) PISTEm->liste_av = ajouteAvionFin(PISTEm->liste_av, parcour->avion);
+                    else if (cpt1 < cpt2 && cpt1 < cpt3) PISTEg->liste_av = ajouteAvionFin(PISTEg->liste_av, parcour->avion);
+                    else if(cpt1 == cpt2 || cpt2 == cpt3) PISTEm->liste_av = ajouteAvionFin(PISTEp->liste_av, parcour->avion);
+                }                
             }
             else if (parcour->avion.cat_av == 3) //avion de leger
             {
-                if (cpt3 < cpt2 && cpt3 < cpt1) PISTEp->liste_av = ajouteAvionFin(PISTEp->liste_av, parcour->avion);
-                else if (cpt2 < cpt3 && cpt2 < cpt1) PISTEm->liste_av = ajouteAvionFin(PISTEm->liste_av, parcour->avion);
+                if (cpt3 == 0)
+                {
+                     PISTEp->liste_av->avion = parcour->avion;
+                }
+                else{
+                    if (cpt3 < cpt2 && cpt3 < cpt1) PISTEp->liste_av = ajouteAvionFin(PISTEp->liste_av, parcour->avion);
+                    else if (cpt2 < cpt3 && cpt2 < cpt1) PISTEm->liste_av = ajouteAvionFin(PISTEm->liste_av, parcour->avion);
+                    else if (cpt3 == cpt2) PISTEp->liste_av = ajouteAvionFin(PISTEp->liste_av, parcour->avion);
+                }                
             }    
         }
         parcour = parcour->suiv;       
@@ -708,14 +743,18 @@ void creerDATABASE(char *nomFichier){
     printf("combien voulez vous mettre d'avion dans votre base de donnée ?\n");
     scanf("%d", &nb);
 
-    liste *DATABASE = NULL;
-    DATABASE = malloc(sizeof(liste));
+    liste *DATABASE = malloc(sizeof(liste));
     for (int i = 0; i < nb; i++)
     {
-        avion avion1;
+    	avion avion1;
         avion1 = creerAvion(avion1);
-        DATABASE = ajouteAvionFin(DATABASE, avion1);
+    	if(i == 0){
+    		DATABASE->avion = avion1;
+    	}
+        else DATABASE = ajouteAvionFin(DATABASE, avion1);
     }
+    sauvegardeFichier(DATABASE, nomFichier);
+    
 }
 
 void print_garage(int aviongarage)
@@ -795,123 +834,3 @@ void couleur_char(char c)
         break;
     }
 }
-int compteurParking(parking* p){
-    int cpt = 0;
-    avion *tmp;
-    tmp = p->liste_av; 
-    while(tmp != NULL){
-        cpt++;
-        tmp = tmp->suiv;
-    }
-    return cpt;
-}
-//-------------------------------------------------------------------------------------//
-//-------------------------fonction atterrissage--------------------------------------//
-void atterrissage(piste *piste_une, parking *parking1, avion *avion1){
-    int cpt = compteurPiste(piste_une);
-    int cpt2 = compteurParking(parking1);
-    if((cpt+1) < piste_une->max_await_takeoff){         //test si on peut passer sur piste pour aller garage    !!!!!! c'est cpt+1 enft
-        if(cpt2 < parking1->maxParking){             //test si place dans le garage 
-            avion *tmp = parking1->liste_av;
-            while(tmp->suiv != NULL){               //parcour liste chainée du garage 
-                tmp = tmp->suiv;
-            }
-            tmp->suiv = avion1;                     //Place l'avion dans le garage
-        }
-
-        else if(cpt2 >= parking1->maxParking){
-            //mettre la fonction affectation a la liste d'attente de la piste ici(adri)
-            
-            //BA LA JE SAIS PAS, par ce que les avions dans le garage n'ont pas forcement besoin de decoller....
-            //Si si il faut en degager un si il n'y a plus de place dans le garage a moins que on fasse un Allahouabar mais bof perso(adri)
-        }
-    }
-    else if(cpt = piste_une->max_await_takeoff){
-
-
-        //!!doit trouver un truc pour stockée l'avion qui part!!//
-        //fonction takeoff dcp(adri)
-        piste_une->liste_av = piste_une->liste_av->suiv;            //on fait decoller le premiere avion qui est arrivé dans la liste,  ca revient a le supprimé de la liste mais pas le free
-
-
-
-                //une fois qu'on a fait decoller un avion, on peut utiliser la piste pour aller au parking si il y a de la place
-        if(cpt2 < parking1->maxParking){             //test si place dans le garage 
-            avion *tmp = parking1->liste_av;
-            while(tmp->suiv != NULL){               //parcour liste chainée du garage 
-                tmp = tmp->suiv;
-            }
-            tmp->suiv = avion1;                     //Place l'avion dans le garage
-        }
-        else{
-            //BA LA JE SAIS PAS, par ce que les avions dans le garage n'ont pas forcement besoin de decoller....
-            //la meme que au dessus mon gars
-        }
-    }
-}
-//---------------------------------------------------------------------------------------------------------------------//
-
-
-piste init_piste(int num_piste, float longueur, int cat_piste, int max_await){
-        piste piste;
-        piste.num_piste=num_piste;
-        piste.longueur=longueur;
-        piste.cat_piste=cat_piste;
-        piste.max_await=max_await;
-        piste.liste_av=NULL;
-        return piste;
-};
-
-avion init_avion(int id,int cat_av, int is_flying , int nb_passaers){
-    avion avion1;
-    avion1.nb_passengers=nb_passaers;
-    avion1.is_flying=is_flying;
-    avion1.cat_av=cat_av;
-    avion1.id=id;
-    avion1.suiv=NULL;
-    return avion1;
-};
-
-void print_piste(piste piste){
-    printf("numero de la piste:%d\n",piste.num_piste);
-    printf("longueur de la piste:%f\n",piste.longueur);
-    printf("categorie de la piste:%d\n",piste.cat_piste);
-    printf("numero de la piste:%d\n",piste.max_await_takeoff);
-    avion* tmp= piste.liste_av;
-    if(tmp!=NULL){
-        while(tmp!=NULL){
-            print_avion(*tmp);
-            tmp=tmp->suiv;
-        }
-    }
-};
-
-
-
-void print_avion(avion avion){
-    printf("id de l'avion:%d\n",avion.id);
-    printf("catégorie de l'avion:%d\n",avion.cat_av);
-    printf("is_flying:%d\n",avion.is_parked);
-    printf("passagers de l'avion:%d\n",avion.nb_passengers);
-}
-
-
-void print_air(int avionair){
-    char* air;
-    air=NULL;
-    air=calloc(1,sizeof(char)*30);
-    for (int i = 0; i < avionair; ++i) {
-        air= strcat(air,"(ooo} ");
-    }
-    printf("%s\n\n",air);
-}
-void print_piste(int avionpiste,int numpiste){
-    char* tmp;
-    tmp=NULL;
-    tmp=calloc(1,sizeof(char)*30);
-    for (int i = 0; i < avionpiste; ++i) {
-        tmp= strcat(tmp,"(ooo}  ");
-    }
-    printf("\n\n\t \t piste %d \n\t  ----------------------------------------------\n\t/   ==   ==   == %s\n\t----------------------------------------------------\n",numpiste,tmp);
-}
-
