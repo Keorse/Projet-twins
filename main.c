@@ -75,7 +75,7 @@ void print_garage(int aviongarage);
 void couleur_char(char c);
 
 int main(void)
-{
+{/*
   piste pisteg = init_piste(3, 90, 3, 1);
     piste pistem = init_piste(2, 90, 2, 1);
     piste pistep = init_piste(1, 90, 1, 1);
@@ -90,12 +90,13 @@ int main(void)
     piste *PISTEg = &pisteg;
     piste *PISTEm = &pistem;
     piste *PISTEp = &pistep;
-    parking *PARKING = &parking1;
+    parking *PARKING = &parking1;*/
     
     //creerDATABASE("fichier.txt");
+
    
  
-
+/*
 	initialisation("fichier.txt", PISTEg, PISTEm, PISTEp, PARKING, &LISTEenVol);
 	
 	printf("pisteg\n");
@@ -107,7 +108,7 @@ int main(void)
 	affiche_liste(pistep.liste_av);
 	
 	printf("vol\n");
-	affiche_liste(LISTEenVol);
+	affiche_liste(LISTEenVol);*/
 	//menu();
     
     
@@ -744,17 +745,45 @@ void creerDATABASE(char *nomFichier){
     scanf("%d", &nb);
 
     liste *DATABASE = malloc(sizeof(liste));
+    liste *parcour = DATABASE;
+
     for (int i = 0; i < nb; i++)
     {
     	avion avion1;
         avion1 = creerAvion(avion1);
+        avion1.id = rand()%50;
+
     	if(i == 0){
     		DATABASE->avion = avion1;
     	}
-        else DATABASE = ajouteAvionFin(DATABASE, avion1);
+        else{
+            int verif =0;
+            while (verif == 0)
+            {
+                while (parcour->suiv != NULL)
+                {
+                    if (avion1.id == parcour->avion.id)
+                    {
+                        avion1.id = rand()%50;
+                        parcour = DATABASE;     //on reset le parcour, pour vérifier si le rand marche de nouveau sur tout les elements de la liste
+                    }
+                    parcour = parcour->suiv;
+                }
+                if (avion1.id == parcour->avion.id) //cas ou dernier element a le meme id, car le while ne traite pas cette element
+                {
+                    avion1.id = rand()%50;
+                    verif =0;
+                }
+                else{
+                    DATABASE = ajouteAvionFin(DATABASE, avion1);  //si on a trouver un id unique on ajout l'avion a la fin de la bdd
+                    verif =1;
+                }
+            }          
+        } 
+        
     }
-    sauvegardeFichier(DATABASE, nomFichier);
-    
+
+    sauvegardeFichier(DATABASE, nomFichier);   
 }
 
 void print_garage(int aviongarage)
